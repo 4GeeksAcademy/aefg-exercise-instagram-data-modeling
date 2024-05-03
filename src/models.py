@@ -65,7 +65,7 @@ class Comments(Base):
     user = relationship(Users)
     post_id = Column(Integer, ForeignKey('post.id'), nullable=False)
     post = relationship(Post)
-    text = Column(string(250))
+    text = Column(String(250))
 
     def to_dict(self):
         return {}
