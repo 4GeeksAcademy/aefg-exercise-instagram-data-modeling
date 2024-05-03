@@ -1,6 +1,6 @@
 import os
 import sys
-from sqlalchemy import Column, ForeignKey, Integer, String
+from sqlalchemy import Column, ForeignKey, Integer, String, Date
 from sqlalchemy.orm import relationship, declarative_base
 from sqlalchemy import create_engine
 from eralchemy2 import render_er
@@ -17,18 +17,19 @@ class Users(Base):
     password = Column(String(250), nullable=False)
     email = Column(String(250), unique=True, nullable=False)
     birthday = Column (Date)
-    biography = Column (string(250))
+    biography = Column (String(250))
     image_user = Column (String(250))
     
     def to_dict(self):
         return {}
 
 class Post(Base):
-    __tablename__ = 'Post'
+    __tablename__ = 'post'
     # Here we define columns for the table address.
     # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True, autoincrement=True)
-    user_id = Column(Integer, ForeignKey('user.id'), nullable=False)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable=False)
+    user = relationship(Users)
     quote = Column(String(250))
     image = Column(String(250), nullable=False)
     video = Column (String(250),nullable=False)
@@ -38,13 +39,16 @@ class Post(Base):
     def to_dict(self):
         return {}
 
-class likes(Base):
-    __tablename__ = 'characters'
+class Likes(Base):
+    __tablename__ = 'likes'
     # Here we define columns for the table address.
     # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True, autoincrement = True)
-    user_id = Column(Integer, ForeignKey('user.id'), nullable = False)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable = False)
+    user = relationship(Users)
     post_id = Column(Integer, ForeignKey('post.id'), nullable = False)
+    post = relationship(Post)
+    
     
 
     def to_dict(self):
@@ -52,13 +56,15 @@ class likes(Base):
 
 
 
-class comments(Base):
-    __tablename__ = 'favorite'
+class Comments(Base):
+    __tablename__ = 'comments'
     # Here we define columns for the table address.
     # Notice that each column is also a normal Python instance attribute.
     id = Column(Integer, primary_key=True, autoincrement= True)
-    user_id = Column(Integer, ForeignKey('user.id'), nullable= False)
+    user_id = Column(Integer, ForeignKey('users.id'), nullable= False)
+    user = relationship(Users)
     post_id = Column(Integer, ForeignKey('post.id'), nullable=False)
+    post = relationship(Post)
     text = Column(string(250))
 
     def to_dict(self):
